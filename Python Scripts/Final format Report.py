@@ -1,3 +1,4 @@
+# Importing all the necessary libraries
 import numpy as np 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -9,6 +10,7 @@ from pywintypes import com_error
 
 
 
+# formatting data to process it
 def format_dataframe(df):
     y = list(df.columns)
     x = list(df.columns)
@@ -20,6 +22,7 @@ def format_dataframe(df):
     return df, y[5:10]
 
 
+# Storing the names of all students in a txt file.
 def names(df):
     file = open("names.txt", "w")
     student_names = list(df["Name"])
@@ -29,6 +32,9 @@ def names(df):
 
 
 
+# performing general analysis on the data.
+# Finding the highest marks scored by a student in every subject
+# Finding the average marks scored in every subject
 def gen_analysis(df):
     s1 = max(df["subject 1"])
     s2 = max(df["subject 2"])
@@ -44,10 +50,13 @@ def gen_analysis(df):
     s5 =  np.mean(df["subject 5"])
     avg_marks = [s1, s2, s3, s4, s5]
     
+    # Creating series for storing max and average marks
     s_1 = pd.Series(max_marks, index = ["subject 1", "subject 2", "subject 3", "subject 4", "subject 5"])
     s_2 = pd.Series(avg_marks, index = ["subject 1", "subject 2", "subject 3", "subject 4", "subject 5"])
-
+    
+    # Creating a data frame containing max and avg scores
     analysis = pd.DataFrame([s_1, s_2])
+    # Changing the shape of the data frame 
     analysis = analysis.T
     analysis.rename(columns={0:"Max Marks", 1:"Average Marks"}, inplace = True)
     
@@ -55,6 +64,8 @@ def gen_analysis(df):
 
 
 
+# Comparing marks of every student with max and avg marks and creating a comparison graph
+# Joint Bar Graph
 def student_perf_graph(student_marks, avg_marks, max_marks, subject_names):
     n_groups = 5
     data = [avg_marks, max_marks]
@@ -76,12 +87,16 @@ def student_perf_graph(student_marks, avg_marks, max_marks, subject_names):
     plt.title('Comparison Graph')
     plt.xticks(index + bar_width, tuple(subject_names))
     plt.legend()
+    
+    # saving the plot as plot_1.png
     plt.savefig("plot_1.png", dpi = 150)
     plt.tight_layout()
     
 
 
-
+# Creating the report card adding column with grades
+# Adding an extra row with total marks
+# Report currently contains no credentials
 def report_card(student_marks, subject_names):
     subjects = ["subject 1", "subject 2", "subject 3", "subject 4", "subject 5"]
     min_marks = [4 for i in range(5)]
@@ -124,7 +139,11 @@ def report_card(student_marks, subject_names):
 
 
 
-
+# Formatting the final report card .
+# Adding the credentials:
+# Name/ Roll no/ College Code/ College Name/ Gender/ Attendance
+# Inserting the comparison graph for each student.
+# Returning the final percentage.
 def final_format(r, x):
     mks = list(r["Student"])[-1]
     percentage = (mks/50)*100
@@ -132,6 +151,7 @@ def final_format(r, x):
     wb = openpyxl.load_workbook("sample_file.xlsx")  
     sheet = wb.active  
     
+    # Merging cells for adding credentials
     sheet.merge_cells('A1:B1')
     sheet.merge_cells('A13:C13')
     sheet.merge_cells('C1:E1')
@@ -173,16 +193,19 @@ def final_format(r, x):
         for i in range(6, 12):
             cell = sheet.cell(row = i, column = j)
             cell.alignment = Alignment(horizontal='center', vertical='center')
-
+    
+    # opening and inserting comparison graph of the student
     img = openpyxl.drawing.image.Image('plot_1.png')
     img.height = 300
     img.width = 450
     sheet.add_image(img, "A15")
+    # saving the final report card as report_card.xlsx
     wb.save("report_card.xlsx")
     
 
 
-
+# Converting the final report file i.e "report_card.xlsx" to pdf format
+# saving the file with naming convention "student_rollno.pdf"
 def convert_to_pdf(i):
     
     WB_PATH = r'C:\Users\HP\Desktop\Jupyter Notebooks\report_card.xlsx'
@@ -216,7 +239,7 @@ def convert_to_pdf(i):
         
 
 
-
+# Fianlly putting together all the functions and generating reports for every student .
 def main():
     df = pd.read_excel("Required Format.xlsx")
     for i in range(len(df)):
