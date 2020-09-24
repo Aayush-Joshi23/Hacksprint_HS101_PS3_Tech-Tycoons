@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import openpyxl  
 import time  
-from openpyxl.styles import Alignment 
+from openpyxl.styles import Alignment, Border, Side
 import win32com.client
 from pywintypes import com_error
 
@@ -138,6 +138,37 @@ def report_card(student_marks, subject_names):
     return report
 
 
+# Function for adding detail to the report card
+# Adding border to the data in the file.
+def border_cell(sheet, cell_range):
+    rows = sheet[cell_range]
+    side = Side(border_style='thin', color="FF000000")
+
+    rows = list(rows)  # we convert iterator to list for simplicity, but it's not memory efficient solution
+    max_y = len(rows) - 1  # index of the last row
+    for pos_y, cells in enumerate(rows):
+        max_x = len(cells) - 1  # index of the last cell
+        for pos_x, cell in enumerate(cells):
+            border = Border(
+                left=cell.border.left,
+                right=cell.border.right,
+                top=cell.border.top,
+                bottom=cell.border.bottom
+            )
+            if pos_x == 0:
+                border.left = side
+            if pos_x == max_x:
+                border.right = side
+            if pos_y == 0:
+                border.top = side
+            if pos_y == max_y:
+                border.bottom = side
+
+            # set new border only if it's one of the edge cells
+            if pos_x == 0 or pos_x == max_x or pos_y == 0 or pos_y == max_y:
+                cell.border = border
+    return sheet
+
 
 # Formatting the final report card .
 # Adding the credentials:
@@ -146,61 +177,74 @@ def report_card(student_marks, subject_names):
 # Returning the final percentage.
 def final_format(r, x):
     mks = list(r["Student"])[-1]
-    percentage = (mks/50)*100
+    percentage = (mks / 50) * 100
 
-    wb = openpyxl.load_workbook("sample_file.xlsx")  
-    sheet = wb.active  
+    wb = openpyxl.load_workbook("report_card.xlsx")
+    sheet = wb.active
+
+    sheet = border_cell(sheet, "C1:G11")
+    sheet = border_cell(sheet, "C4:G4")
+    sheet = border_cell(sheet, "C1:D3")
+    sheet = border_cell(sheet, "E5:E10")
+    sheet = border_cell(sheet, "F5:F10")
+    sheet = border_cell(sheet, "G5:G10")
+    sheet = border_cell(sheet, "D5:D10")
+    sheet = border_cell(sheet, "C10:G10")
+    sheet = border_cell(sheet, "C1:G1")
+    sheet = border_cell(sheet, "C2:G2")
+    sheet = border_cell(sheet, "C3:G3")
+    sheet = border_cell(sheet, "C11:D11")
     
     # Merging cells for adding credentials
-    sheet.merge_cells('A1:B1')
-    sheet.merge_cells('A13:C13')
-    sheet.merge_cells('C1:E1')
-    sheet.merge_cells('C2:E2')
-    sheet.merge_cells('C3:E3')
-    
-    cell = sheet.cell(row = 3, column =3)
-    cell.value = "Name:   "+str(x[0])
+    sheet.merge_cells('C1:D1')
+    sheet.merge_cells('C11:D11')
+    sheet.merge_cells('E1:G1')
+    sheet.merge_cells('E2:G2')
+    sheet.merge_cells('E3:G3')
+
+    cell = sheet.cell(row=3, column=5)
+    cell.value = "Name:   " + str(x[0])
     cell.alignment = Alignment(horizontal='center', vertical='center')
-    
-    cell = sheet.cell(row = 1, column =3)
-    cell.value = "College Name:   "+str(x[4])
+
+    cell = sheet.cell(row=1, column=5)
+    cell.value = "College Name:   " + str(x[4])
     cell.alignment = Alignment(horizontal='center', vertical='center')
-    
-    cell = sheet.cell(row = 2, column =3)
-    cell.value = "Attendance:        "+str(x[-1])+"%"
+
+    cell = sheet.cell(row=2, column=5)
+    cell.value = "Attendance:        " + str(x[-1]) + "%"
     cell.alignment = Alignment(horizontal='center', vertical='center')
-    
-    cell = sheet.cell(row = 1, column =1)
-    cell.value = "College Code:   "+str(x[3])
-    cell.alignment = Alignment(horizontal='left', vertical='center')
-    
-    
-    sheet['A2'] = "Gender"  
-    cell = sheet.cell(row = 2, column =2)
-    cell.value = x[2]
-    cell.alignment = Alignment(horizontal='right', vertical='center')
-    
-    
-    sheet['A3'] = "Roll No." 
-    sheet['B3'] = x[1]
-    
-    
-    cell = sheet.cell(row = 13, column = 1)
-    cell.value = "Percentage   =        "+str(percentage)+"%"
+
+    cell = sheet.cell(row=1, column=3)
+    cell.value = "College Code:      " + str(x[3])
     cell.alignment = Alignment(horizontal='left', vertical='center')
 
-    for j in range(1,6):
-        for i in range(6, 12):
-            cell = sheet.cell(row = i, column = j)
+    sheet['C2'] = "Gender"
+    cell = sheet.cell(row=2, column=4)
+    cell.value = x[2]
+    cell.alignment = Alignment(horizontal='right', vertical='center')
+
+    sheet['C3'] = "Roll No."
+    sheet['D3'] = x[1]
+
+    cell = sheet.cell(row=11, column=3)
+    cell.value = "Percentage   ="
+    cell.alignment = Alignment(horizontal='left', vertical='center')
+
+    sheet["E11"] = str(percentage)+"%"
+
+    for j in range(3, 8):
+        for i in range(5, 11):
+            cell = sheet.cell(row=i, column=j)
             cell.alignment = Alignment(horizontal='center', vertical='center')
-    
+
     # opening and inserting comparison graph of the student
     img = openpyxl.drawing.image.Image('plot_1.png')
-    img.height = 300
-    img.width = 450
-    sheet.add_image(img, "A15")
+    img.height = 250
+    img.width = 475
+    sheet.add_image(img, "B13")
     # saving the final report card as report_card.xlsx
     wb.save("report_card.xlsx")
+
     
 
 
@@ -256,7 +300,8 @@ def main():
         x = x[:5]
         x.append(y)
         final_format(r, x)
-        convert_to_pdf(i)
+        n = list(df.iloc[i])[1]
+        convert_to_pdf(n)
 main()
 
 
