@@ -35,7 +35,29 @@
     visibility: visible;
   }
 </style>
+<?php
+if (($_FILES['fileToUpload']['name']!="")){
+        // Where the file is going to be stored
+        $target_dir = "upload/";
+        $file = $_FILES['fileToUpload']['name'];
+        $temp_name = $_FILES['fileToUpload']['tmp_name'];
+        $path = pathinfo($file);
+        $path_temp = pathinfo($temp_name);
+        $filename = $path['filename'];
+        $filename_temp = $path_temp["filename"];
+        $ext = $path['extension'];
+        $ext_temp = $path_temp['extension'];
+        $path_filename_ext = $target_dir.$filename.".".$ext;
+        $output_u2 = shell_exec("rename $temp_name sheets.xlsx");
+        $output_u1 = shell_exec("move C:\\xampp\\tmp\\sheets.xlsx D:\Projects\TechTycoons\HTML\upload");
+      }
+?>
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+function upload() {
+  $("#dropdown").load("names.txt");
+  }
+
 function drop(){
  var selected = document.getElementById("dropdown").value;
  var dest = "/pdfd/";
@@ -71,9 +93,10 @@ function myFunction(){
       txt  += "<br>The path of the selected file: " + x.value; // If the browser does not support the files property, it will return the path of the selected file instead. 
     }
   }
-	console.log(txt)
+  console.log(txt);
 }
 </script>
+<iframe name = "hiddenframe" width="0" height="0" style = "display:none;" border = "0"></iframe>>
 </body>
 <section class="text-gray-700 body-font">
     <div class="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
@@ -84,9 +107,9 @@ function myFunction(){
         <p class="mb-8 leading-relaxed">If you are a student- click on the drop down menu and then click on your name  </p>
         <p class="mb-8 leading-relaxed">If you are a Teacher and want to update the report cards- click on Upload </p>
 		<div class="flex justify-center">
-			<form class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6" id = "upload_form" onsubmit="document.getElementById('upload_b').style.visibility = hidden" action="upload.php" method="post" enctype="multipart/form-data">
+			<form class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6" id = "upload_form" onsubmit="document.getElementById('upload_b').style.visibility = hidden" action="upload.php" target="hiddenframe" method="post" enctype="multipart/form-data">
 				Select image to upload:
-				<input type="file" name="fileToUpload" id="fileToUpload" onchange="myFunction()">
+				<input type="file" name="fileToUpload" id="fileToUpload" onchange="setTimeout(upload,7000)">
 				<!--input type="submit" value="Upload Image" name="submit"-->
 			</form>
 			
@@ -97,19 +120,11 @@ function myFunction(){
             </div>
           </div>
           <br>
-          <button id = "upload_b" class="inline-flex text-white bg-purple-500 border-0 py-2 m-0 px-6 focus:outline-none hover:bg-purple-600 rounded text-lg" form = "upload_form" type = "submit" formaction = "upload.php" formmethod = "post">Upload</button>
+          <button id = "upload_b" class="inline-flex text-white bg-purple-500 border-0 py-2 m-0 px-6 focus:outline-none hover:bg-purple-600 rounded text-lg" form = "upload_form" type = "submit">Upload</button>
           <br>
           <div class="relative m-0">
             <select id = "dropdown" class="dropdown ml-0 appearance-none w-full text-white bg-purple-500 border border-0 hover:border-purple-500 px-5 py-3 pr-9 rounded shadow leading-tight focus:outline-none focus:shadow-outline" onchange='if(this.value != 0) { drop(); }'>
-              <option value = "0">Drop down menu</option>
-              <option>Option 1</option>
-              <option>Option 2</option>
-              <option>Option 3</option>
-              <option>Option 4</option>
-              <option>pratik</option>
-              <option>Option 6</option>
-              <option>Option 7</option>
-
+              <option value = "0">Upload Files</option>
             </select>
 
 
@@ -122,6 +137,7 @@ function myFunction(){
       <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
         <img class="object-cover object-center rounded" alt="hero" src="https://cdn.pixabay.com/photo/2016/01/19/17/53/writing-1149962__340.jpg">
       </div>
+    <button id="noob" onclick="upload()">BUTTTTTTTTT</button>
     </div>
 
   </section>
