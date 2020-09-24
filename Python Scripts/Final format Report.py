@@ -170,17 +170,17 @@ def final_format(r, x):
     img.height = 300
     img.width = 450
     sheet.add_image(img, "A15")
-    wb.save("sample_file.xlsx")
+    wb.save("report_card.xlsx")
     
 
 
 
 def convert_to_pdf(i):
     
-    WB_PATH = r'C:\Users\HP\Desktop\Jupyter Notebooks\sample_file.xlsx'
+    WB_PATH = r'C:\Users\HP\Desktop\Jupyter Notebooks\report_card.xlsx'
     
     
-    PATH_TO_PDF = r'C:\Users\HP\Desktop\Jupyter Notebooks\sample_file_{}.pdf'.format(i)
+    PATH_TO_PDF = r'C:\Users\HP\Desktop\Jupyter Notebooks\student_{}.pdf'.format(i)
 
 
     excel = win32com.client.Dispatch("Excel.Application")
@@ -218,7 +218,7 @@ def main():
         student = list(df.iloc[i])[5:10]
         graph = student_perf_graph(student, avg_marks, max_marks, subject_names)
         r = report_card(student, subject_names)
-        r.to_excel("sample_file.xlsx", sheet_name = "Sheet_1", startrow = 4)
+        r.to_excel("report_card.xlsx", sheet_name = "Sheet_1", startrow = 4)
         x = list(df.iloc[i])
         y = x[-1]
         x = x[:5]
