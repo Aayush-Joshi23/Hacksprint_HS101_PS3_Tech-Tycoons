@@ -20,6 +20,14 @@ def format_dataframe(df):
     return df, y[5:10]
 
 
+def names(df):
+    file = open("names.txt", "w")
+    student_names = list(df["Name"])
+    for i in range(len(student_names)):
+        file.write(student_names[i]+"\n")
+    file.close()
+
+
 
 def gen_analysis(df):
     s1 = max(df["subject 1"])
@@ -42,6 +50,7 @@ def gen_analysis(df):
     analysis = pd.DataFrame([s_1, s_2])
     analysis = analysis.T
     analysis.rename(columns={0:"Max Marks", 1:"Average Marks"}, inplace = True)
+    
     return analysis, avg_marks, max_marks
 
 
@@ -69,7 +78,6 @@ def student_perf_graph(student_marks, avg_marks, max_marks, subject_names):
     plt.legend()
     plt.savefig("plot_1.png", dpi = 150)
     plt.tight_layout()
-    plt.show()
     
 
 
@@ -214,6 +222,7 @@ def main():
     for i in range(len(df)):
         df = pd.read_excel("Required Format.xlsx")
         df, subject_names = format_dataframe(df)
+        names(df)
         analysis, avg_marks, max_marks = gen_analysis(df)
         student = list(df.iloc[i])[5:10]
         graph = student_perf_graph(student, avg_marks, max_marks, subject_names)
