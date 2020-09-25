@@ -14,7 +14,7 @@ A web page developed using JavaScript, HTML and PHP where user can upload the ex
 
 ### Part Two: Back End
 
-The back end is written in Python. The script takes in excel file as input converts it into a Pandas DataFrame. The DataFrame is processed and analysis is done. The script displays the analysis in form of a graph, the graph shows comparison between average marks scored, max marks stored and marks obtained by the student. The script converts the larger dataframe into indvidual report card these report cards are then converted into an excel file , formatting is done the graph is added to the file and the file is converted into a pdf file.
+The back end is written in Python. The script takes in excel file as input converts it into a Pandas DataFrame. The DataFrame is processed and analysis is done. The script displays the analysis in form of a graph, the graph shows comparison between average marks scored, max marks stored and marks obtained by the student. The script converts the larger dataframe into indvidual report card these report cards are then converted into an excel file , formatting is done the graph is added to the file and the file is converted into a pdf file. This pdf is then converted into an image that can be shared on LinkedIn.
 
 Python Packages used:
 1. Pandas
@@ -23,5 +23,6 @@ Python Packages used:
 4. Openpyxl
 5. Time
 6. Pypiwin32
+7. PyMuPDF
 
 #### Developers: Yashowardhan Shinde | Piyush Nagpal
