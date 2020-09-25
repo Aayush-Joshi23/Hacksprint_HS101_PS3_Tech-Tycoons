@@ -32,6 +32,82 @@ def names(df):
         file.write("<option>" + student_names[i] + "_" + str(roll_number[i] + "</option>\n")
     file.close()
 
+                   
+# Performing general analysis of boys passed and girls passed in the exam.
+# converting analysis into html code
+# write the code in a text file.
+def pass_percentage(df):
+    male_marks = []
+    female_marks = []
+    for i in range(len(df)):
+        if df.iloc[i]["Gender"] == 'M':
+            male_marks.append(sum(list(df.iloc[i])[5:10]) / 5)
+        else:
+            female_marks.append(sum(list(df.iloc[i])[5:10]) / 5)
+
+    pass_male = 0
+    pass_female = 0
+
+    for j in range(len(male_marks)):
+        if male_marks[j] >= 4:
+            pass_male += 1
+
+    for k in range(len(female_marks)):
+        if female_marks[k] >= 4:
+            pass_female += 1
+
+    male_appeared = len(male_marks)
+    female_appeared = len(female_marks)
+    try:
+        male_pass_percentage = (pass_male / male_appeared) * 100
+    except ZeroDivisionError:
+        male_pass_percentage = "No male appeared for the exam."
+    try:
+        female_pass_percentage = (pass_female / female_appeared) * 100
+    except ZeroDivisionError:
+        female_pass_percentage = "No female appeared for the exam."
+
+    file = open(r"C:\Users\HP\Desktop\Jupyter Notebooks\Output\pass_percent.txt", "w")
+
+    file.write(r'<div class="p-4 sm:w-1/4 w-1/2">' + '\n')
+    file.write(r'  <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{}</h2>'.format(str(male_appeared)) + '\n')
+    file.write(r'  <p class="leading-relaxed">Males who appeared for the Exam</p>' + '\n')
+    file.write(r'</div>' + '\n')
+
+    file.write(r'<div class="p-4 sm:w-1/4 w-1/2">' + '\n')
+    file.write(r'  <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{}</h2>'.format(str(female_appeared)) + '\n')
+    file.write(r'  <p class="leading-relaxed">Females who appeared for the Exam</p>' + '\n')
+    file.write(r'</div>' + '\n')
+
+    if type(male_pass_percentage) == str:
+
+        file.write(r'<div class="p-4 sm:w-1/4 w-1/2">' + '\n')
+        file.write(r'  <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{}</h2>'.format(str(0)) + '\n')
+        file.write(r'  <p class="leading-relaxed">Passing Percentage of Males</p>' + '\n')
+        file.write(r'</div>' + '\n')
+
+    else:
+
+        file.write(r'<div class="p-4 sm:w-1/4 w-1/2">' + '\n')
+        file.write(r'  <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{}%</h2>'.format(str(male_pass_percentage)) + '\n')
+        file.write(r'  <p class="leading-relaxed">Passing Percentage of Males</p>' + '\n')
+        file.write(r'</div>' + '\n')
+
+    if type(female_pass_percentage) == str:
+
+        file.write(r'<div class="p-4 sm:w-1/4 w-1/2">' + '\n')
+        file.write(r'  <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{}</h2>'.format(str(0)) + '\n')
+        file.write(r'  <p class="leading-relaxed">Passing Percentage of Females</p>' + '\n')
+        file.write(r'</div>' + '\n')
+
+    else:
+
+        file.write(r'<div class="p-4 sm:w-1/4 w-1/2">' + '\n')
+        file.write(r'  <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">{}%</h2>'.format(str(female_pass_percentage)) + '\n')
+        file.write(r'  <p class="leading-relaxed">Passing Percentage of Females</p>' + '\n')
+        file.write(r'</div>' + '\n')
+
+    file.close()
 
 
 # performing general analysis on the data.
@@ -292,6 +368,7 @@ def main(file_name):
         df = pd.read_excel("Required Format.xlsx")
         df, subject_names = format_dataframe(df)
         names(df)
+        pass_percentage(df)
         analysis, avg_marks, max_marks = gen_analysis(df)
         student = list(df.iloc[i])[5:10]
         graph = student_perf_graph(student, avg_marks, max_marks, subject_names)
