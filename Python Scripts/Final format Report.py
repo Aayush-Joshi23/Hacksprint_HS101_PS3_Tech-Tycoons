@@ -26,8 +26,9 @@ def format_dataframe(df):
 def names(df):
     file = open("names.txt", "w")
     student_names = list(df["Name"])
+    roll_number = list(df["Roll No."])
     for i in range(len(student_names)):
-        file.write(student_names[i]+"\n")
+        file.write("<option>" + student_names[i] + "_" + str(roll_number[i] + "</option>\n")
     file.close()
 
 
@@ -250,12 +251,12 @@ def final_format(r, x):
 
 # Converting the final report file i.e "report_card.xlsx" to pdf format
 # saving the file with naming convention "student_rollno.pdf"
-def convert_to_pdf(i):
+def convert_to_pdf(i, name):
     
     WB_PATH = r'C:\Users\HP\Desktop\Jupyter Notebooks\report_card.xlsx'
     
     
-    PATH_TO_PDF = r'C:\Users\HP\Desktop\Jupyter Notebooks\student_{}.pdf'.format(i)
+    PATH_TO_PDF = r'C:\Users\HP\Desktop\Jupyter Notebooks\{}_{}.pdf'.format(name, i)
 
 
     excel = win32com.client.Dispatch("Excel.Application")
@@ -301,7 +302,8 @@ def main():
         x.append(y)
         final_format(r, x)
         n = list(df.iloc[i])[1]
-        convert_to_pdf(n)
+        name = list(df.iloc[i])[0]
+        convert_to_pdf(n, name)
 main()
 
 
