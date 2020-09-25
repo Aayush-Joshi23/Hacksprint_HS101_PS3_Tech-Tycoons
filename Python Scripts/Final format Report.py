@@ -8,6 +8,7 @@ from openpyxl.styles import Alignment, Border, Side
 import win32com.client
 from pywintypes import com_error
 import os
+import fitz
 
 
 
@@ -29,7 +30,7 @@ def names(df):
     student_names = list(df["Name"])
     roll_number = list(df["Roll No."])
     for i in range(len(student_names)):
-        file.write("<option>" + student_names[i] + "_" + str(roll_number[i] + "</option>\n")
+        file.write("<option>" + student_names[i] + "_" + str(roll_number[i]) + "</option>\n")
     file.close()
 
                    
@@ -358,9 +359,23 @@ def convert_to_pdf(i, name):
         print('Succeeded.')
     finally:
         excel.Quit()
+  
+
+# converting pdf to image
+# image can be shared on LinkedIn
+def convert_to_image():
+    x = list(os.listdir(r'C:\Users\HP\Desktop\Jupyter Notebooks\Output'))
+    x = [i for i in x if '.pdf' in i]
+    os.chdir(r'C:\Users\HP\Desktop\Jupyter Notebooks\Output')
+    for a in x:
+        pdf_file = a
+        doc = fitz.open(pdf_file)
+        page = doc.loadPage(0)
+        pix = page.getPixmap()
+        output = '{}.png'.format(a[:-4])
+        pix.writePNG(output)
+
         
-
-
 # Fianlly putting together all the functions and generating reports for every student .
 def main(file_name):
     df = pd.read_excel(file_name)
@@ -382,6 +397,7 @@ def main(file_name):
         n = list(df.iloc[i])[1]
         name = list(df.iloc[i])[0]
         convert_to_pdf(n, name)
+    convert_to_image()
 
                    
 
@@ -398,6 +414,7 @@ def run_script():
                 file_name = x[0]
                 main(file_name)
                 x = os.listdir(r"C:\Users\HP\Desktop\Jupyter Notebooks\Input")
+                os.chdir(r"C:\Users\HP\Desktop\Jupyter Notebooks\Input")
                 for i in x:
                     os.remove(i)
                 print("empty")
