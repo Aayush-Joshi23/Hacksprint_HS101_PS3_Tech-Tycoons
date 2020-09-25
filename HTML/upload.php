@@ -13,6 +13,6 @@ if (($_FILES['fileToUpload']['name']!="")){
         $path_filename_ext = $target_dir.$filename.".".$ext;
         $output_u2 = shell_exec("rename $temp_name sheets.xlsx");
         $output_u1 = shell_exec("move C:\\xampp\\tmp\\sheets.xlsx D:\Projects\TechTycoons\HTML\upload");
-        $output_u3 = shell_exec("dir");
+        header("Location: website.html");
 }
 ?>
