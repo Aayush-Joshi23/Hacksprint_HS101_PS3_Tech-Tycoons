@@ -56,6 +56,7 @@ function upload() {
   console.log(document.getElementById("upload_form").value);
   document.getElementById('upload_b').style.display = "none";
   $("#dropdown").load("pdfd/names.txt");
+  $('#bottom_info').load("pdfd/pass_percent.txt");
   }
 
 function drop(){
@@ -116,7 +117,7 @@ function drop(){
   </section>
   <section class="text-gray-700 body-font">
     <div class="container px-5 py-3 mx-auto">
-      <div class="flex flex-wrap -m-4 text-center">
+      <div id = "bottom_info" class="flex flex-wrap -m-4 text-center">
         <div class="p-4 sm:w-1/4 w-1/2">
           <h2 class="title-font font-medium sm:text-4xl text-3xl text-gray-900">2.7k</h2>
           <p class="leading-relaxed">Total Students Appeared</p>
