@@ -7,6 +7,7 @@ import time
 from openpyxl.styles import Alignment, Border, Side
 import win32com.client
 from pywintypes import com_error
+import os
 
 
 
@@ -24,7 +25,7 @@ def format_dataframe(df):
 
 # Storing the names of all students in a txt file.
 def names(df):
-    file = open("names.txt", "w")
+    file = open(r"C:\Users\HP\Desktop\Jupyter Notebooks\Input\names.txt", "w")
     student_names = list(df["Name"])
     roll_number = list(df["Roll No."])
     for i in range(len(student_names)):
@@ -256,7 +257,7 @@ def convert_to_pdf(i, name):
     WB_PATH = r'C:\Users\HP\Desktop\Jupyter Notebooks\report_card.xlsx'
     
     
-    PATH_TO_PDF = r'C:\Users\HP\Desktop\Jupyter Notebooks\{}_{}.pdf'.format(name, i)
+    PATH_TO_PDF = r'C:\Users\HP\Desktop\Jupyter Notebooks\Output\{}_{}.pdf'.format(name, i)
 
 
     excel = win32com.client.Dispatch("Excel.Application")
@@ -285,8 +286,8 @@ def convert_to_pdf(i, name):
 
 
 # Fianlly putting together all the functions and generating reports for every student .
-def main():
-    df = pd.read_excel("Required Format.xlsx")
+def main(file_name):
+    df = pd.read_excel(file_name)
     for i in range(len(df)):
         df = pd.read_excel("Required Format.xlsx")
         df, subject_names = format_dataframe(df)
@@ -304,7 +305,30 @@ def main():
         n = list(df.iloc[i])[1]
         name = list(df.iloc[i])[0]
         convert_to_pdf(n, name)
-main()
+
+                   
+
+# Automatically puuls files from Input Folder when a File is Uploaded.
+# creates output files in a folder called Output
+def run_script():
+    x = os.listdir(r"C:\Users\HP\Desktop\Jupyter Notebooks\Input")
+    while True:
+        x = os.listdir(r"C:\Users\HP\Desktop\Jupyter Notebooks\Input")
+        try:
+            if x:
+                os.chdir(r"C:\Users\HP\Desktop\Jupyter Notebooks\Input")
+                # print(x)
+                file_name = x[0]
+                main(file_name)
+                x = os.listdir(r"C:\Users\HP\Desktop\Jupyter Notebooks\Input")
+                for i in x:
+                    os.remove(i)
+                print("empty")
+                x = os.listdir(r"C:\Users\HP\Desktop\Jupyter Notebooks\Input")
+        except PermissionError:
+            pass
+
+run_script()
 
 
 
