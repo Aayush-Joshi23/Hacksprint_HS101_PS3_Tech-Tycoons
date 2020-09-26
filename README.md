@@ -4,10 +4,11 @@
 
 ### Part One: Front End
 
-A web page developed using JavaScript, HTML and PHP where user can upload the excel file and get the report card as as output. The web page will also contain information about the format of the file that needs to be uploaded all formats cannot be processed, the webpage will have only two fuctions:
+A web page developed using JavaScript, HTML and PHP where user can upload the excel file and get the report card as as output, finally the website will give the user an option to share his/ her report card on LinkedIn. The web page will also contain information about the format of the file that needs to be uploaded all formats cannot be processed, the webpage will have three fuctions:
 
 1. Taking Excel as Input
 2. Displaying PDF as output
+3. Redirecting user to LinkedIn to share their report card.
 
 #### Developers: Pratik Bathe | Aayush Joshi
 
